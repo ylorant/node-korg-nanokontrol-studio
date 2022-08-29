@@ -1,0 +1,29 @@
+{
+  "name": "korg-nanokontrol-studio",
+  "version": "1.0.0",
+  "description": "Korg NanoKONTROL Studio interface for Node JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ylorant/node-korg-nanokontrol-studio.git"
+  },
+  "keywords": [
+    "korg",
+    "nanokontrol",
+    "studio",
+    "midi",
+    "daw"
+  ],
+  "author": "Yohann Lorant <yohann.lorant@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ylorant/node-korg-nanokontrol-studio/issues"
+  },
+  "homepage": "https://github.com/ylorant/node-korg-nanokontrol-studio#readme",
+  "dependencies": {
+    "midi": "^2.0.0"
+  }
+}
