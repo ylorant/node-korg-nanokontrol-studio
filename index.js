@@ -22,7 +22,7 @@ class KorgNanoKontrolStudio extends EventEmitter
     }
 
     /**
-     * Gets the available MIDI devices.
+     * Gets the available compatible MIDI devices.
      * 
      * @returns object The list of available devices as an object with "input" and "output" keys for sorting.
      */
@@ -69,7 +69,7 @@ class KorgNanoKontrolStudio extends EventEmitter
     }
 
     /**
-     * Connects to the X-Touch. If no input/output device is provided, it will be auto-guessed.
+     * Connects to the NanoKontrol Studio. If no input/output device is provided, it will be auto-guessed.
      * 
      * @param {int} midiInput Midi input device number.
      * @param {int} midiOutput Midi output device number.
@@ -105,12 +105,29 @@ class KorgNanoKontrolStudio extends EventEmitter
         } catch(e) {
             this.emit("error", e);
             this.emit("debug", "Cannot open MIDI port: " + e.message);
+
+            return false;
         }
 
         // Allow catching SysEx messages 
         this.input.ignoreTypes(false, true, true);
         this.currentScene = null;
+
+        this.emit("connected", midiInput, midiOutput);
+
+        return true;
     }
+
+    /**
+     * Disconnects from the NanoKontrol Studio.
+     */
+     disconnect()
+     {
+         this.input.closePort();
+         this.output.closePort();
+
+         this.emit("disconnected");
+     }
 
     /**
      * Callback on MIDI message received.
