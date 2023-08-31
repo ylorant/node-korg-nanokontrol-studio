@@ -152,7 +152,7 @@ class KorgNanoKontrolStudio extends EventEmitter
      */
     handleSysExMessage(msg)
     {
-        this.emit("debug", "SysEx message: " + msg);
+        this.emit("debug", "SysEx recv: " + msg);
 
         let newScene = msg[10] + 1;
         this.currentScene = newScene;
@@ -172,7 +172,7 @@ class KorgNanoKontrolStudio extends EventEmitter
         let [cmdType, target, value] = msg;
         let channel = null; 
 
-        this.emit("debug", "MIDI message: " + msg);
+        this.emit("debug", "MIDI recv: " + msg);
 
         if((cmdType >= CMD_CC && cmdType < CMD_CC + CHANNEL_COUNT)) {
             channel = cmdType - CMD_CC + 1; // Add 1 to set the MIDI channel to 1-16
@@ -181,6 +181,9 @@ class KorgNanoKontrolStudio extends EventEmitter
         } else {
             return; // Midi message is not understood, stop handling.
         }
+
+        // Set the current scene on the channel sent by the device
+        this.currentScene = channel;
 
         // Button presses
         if(Controls.Buttons.match(target)) {
@@ -201,6 +204,12 @@ class KorgNanoKontrolStudio extends EventEmitter
             this.emit("debug", "Jogwheel: " + direction);
             this.emit("jogwheel", direction);
         }
+    }
+
+    send(data)
+    {
+        this.emit("debug", "MIDI send: " + data);
+        this.output.sendMessage(data);
     }
 
     /**
@@ -234,7 +243,7 @@ class KorgNanoKontrolStudio extends EventEmitter
     light(button, status)
     {
         this.emit("debug", "Setting button light: " + Controls.ButtonNames[button] + " to " + (status ? "on" : "off"));
-        this.output.sendMessage([CMD_CC, button, status ? Controls.PressStatus.ON : Controls.PressStatus.OFF]);
+        this.send([CMD_CC + this.currentScene - 1, button, status ? Controls.PressStatus.ON : Controls.PressStatus.OFF]);
     }
 
     /**
