@@ -17,6 +17,7 @@ class KorgNanoKontrolStudio extends EventEmitter
         // Midi devices
         this.input = new Midi.Input();
         this.output = new Midi.Output();
+        this.currentScene = null;
 
         this.input.on("message", this.onMidiMessage.bind(this));
     }
@@ -111,7 +112,9 @@ class KorgNanoKontrolStudio extends EventEmitter
 
         // Allow catching SysEx messages 
         this.input.ignoreTypes(false, true, true);
-        this.currentScene = null;
+
+        // Set current scene at 1 on startup
+        this.setCurrentScene(1);
 
         this.emit("connected", midiInput, midiOutput);
 
