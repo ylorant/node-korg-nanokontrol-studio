@@ -83,16 +83,20 @@ class KorgNanoKontrolStudio extends EventEmitter
             
             if(!midiInput) {
                 this.emit("debug", "No input device ID provided, auto-discovering it.");
-                midiInput = parseInt(Object.keys(devices.input)[0]);
+                if(Object.keys(devices.input).length > 0) {
+                    midiInput = parseInt(Object.keys(devices.input)[0]);
+                }
             }
             
             if(!midiOutput) {
                 this.emit("debug", "No output device ID provided, auto-discovering it.");
-                midiOutput = parseInt(Object.keys(devices.output)[0]);
+                if(Object.keys(devices.output).length > 0) {
+                    midiOutput = parseInt(Object.keys(devices.output)[0]);
+                }
             }
         }
         
-        if(!midiInput || !midiOutput) {
+        if(midiInput === null || midiOutput === null) {
             this.emit("error", "No device discovered.");
             return;
         }
